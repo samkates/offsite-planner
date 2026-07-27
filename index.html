@@ -16,7 +16,10 @@ body {
 }
 .wrap { max-width: 920px; margin: 0 auto; padding: 24px 20px 60px; }
 h1 { font-size: 22px; margin: 0 0 4px; }
-.sub { color: #5b6b82; font-size: 14px; margin: 0 0 22px; }
+.sub { color: #5b6b82; font-size: 14px; margin: 0 0 12px; }
+.freshness { display:flex; align-items:flex-start; gap:9px; background:#eef4ff; border:1px solid #d6e4ff; color:#33465e; font-size:13px; line-height:1.45; border-radius:10px; padding:11px 14px; margin:0 0 22px; }
+.freshness b { color:#1a2332; }
+.fresh-dot { width:8px; height:8px; border-radius:50%; background:#0b5fff; margin-top:5px; flex-shrink:0; }
 .controls {
   background: #fff; border: 1px solid #e2e8f2; border-radius: 14px;
   padding: 18px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
@@ -77,6 +80,12 @@ button:hover { background: #0a4fd6; }
   <h1>Team Offsite Hotel-Demand Planner</h1>
   <p class="sub">Pick a city and your possible dates for your team offsite. See the events driving demand, a hotel-price signal, dates to avoid, and spillover from nearby cities — before you commit.</p>
 
+  <!-- ============================================================= -->
+  <!-- LAST REFRESHED: update ONLY the date in the line below each   -->
+  <!-- time you refresh the site (keep the format: Month Day, Year). -->
+  <!-- ============================================================= -->
+  <div class="freshness"><span class="fresh-dot"></span><div><b>Data last refreshed: July 27, 2026.</b> Event dates and listings are subject to change. This site is refreshed roughly every 30 days &mdash; always confirm current hotel rates and event dates before booking.</div></div>
+
   <div class="controls">
     <div class="field">
       <label for="city">City</label>
@@ -92,6 +101,8 @@ button:hover { background: #0a4fd6; }
           <option value="saopaulo">São Paulo, Brazil</option>
           <option value="toronto">Toronto, Canada</option>
           <option value="mexicocity">Mexico City, Mexico</option>
+          <option value="nashville">Nashville, TN</option>
+          <option value="philadelphia">Philadelphia, PA</option>
         </optgroup>
         <optgroup label="EMEA">
           <option value="paris">Paris, France</option>
@@ -200,6 +211,18 @@ const EVENTS = {
     { name:"Día de Muertos", cat:"Cultural", start:"2026-10-31", end:"2026-11-02", impact:3, note:"Day of the Dead draws heavy tourism to the capital." },
     { name:"Semana Santa (Holy Week)", cat:"Holiday", start:"2027-03-22", end:"2027-03-28", impact:2, est:true, note:"Spring-break-style domestic travel week." }
   ],
+  nashville: [
+    { name:"CMA Fest", cat:"Music festival", start:"2026-06-04", end:"2026-06-07", impact:4, note:"Country music's biggest week at Nissan Stadium; downtown books out." },
+    { name:"Bonnaroo (Manchester, TN)", cat:"Music festival", start:"2026-06-11", end:"2026-06-14", impact:2, est:true, note:"Huge festival ~60 miles away; some spillover into Nashville lodging.", spill:{city:"Manchester, TN"} },
+    { name:"CMA Awards", cat:"Cultural", start:"2026-11-18", end:"2026-11-18", impact:3, note:"Country Music Association Awards at Bridgestone Arena." },
+    { name:"New Year's Eve on Broadway", cat:"Holiday", start:"2026-12-31", end:"2026-12-31", impact:2, note:"Downtown NYE celebration." }
+  ],
+  philadelphia: [
+    { name:"FIFA World Cup 2026 (Lincoln Financial Field)", cat:"Sports", start:"2026-06-14", end:"2026-07-04", impact:4, note:"Philadelphia hosts 6 World Cup matches Jun 14–Jul 4 — expect major, sustained demand across the window." },
+    { name:"America250 — July 4th Semiquincentennial", cat:"Holiday", start:"2026-07-03", end:"2026-07-05", impact:4, note:"250th anniversary of the Declaration of Independence; Philadelphia is the epicenter and it overlaps the July 4 World Cup match. Book very early." },
+    { name:"Philadelphia Flower Show", cat:"Cultural", start:"2026-02-28", end:"2026-03-08", impact:3, note:"PHS show at the PA Convention Center; large late-winter draw." },
+    { name:"Broad Street Run", cat:"Sports", start:"2026-05-03", end:"2026-05-03", impact:2, est:true, note:"Large 10-mile road race, typically early May." }
+  ],
   // ---------- EMEA ----------
   paris: [
     { name:"Roland-Garros (French Open)", cat:"Sports", start:"2026-05-24", end:"2026-06-07", impact:3, est:true, note:"Two weeks of tennis in late spring; strong demand." },
@@ -307,6 +330,8 @@ const SEASON = {
   saopaulo:{1:2,2:3,3:1,4:1,5:1,6:1,7:1,8:1,9:1,10:1,11:2,12:2},
   toronto:{1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:3,10:1,11:1,12:1},
   mexicocity:{1:1,2:1,3:2,4:2,5:1,6:1,7:2,8:1,9:2,10:2,11:2,12:2},
+  nashville:{1:1,2:1,3:2,4:2,5:2,6:3,7:2,8:2,9:2,10:2,11:2,12:2},
+  philadelphia:{1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:1,9:2,10:2,11:1,12:1},
   paris:{1:1,2:2,3:2,4:2,5:3,6:3,7:3,8:2,9:3,10:2,11:1,12:2},
   berlin:{1:1,2:2,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:1,11:1,12:2},
   dublin:{1:1,2:1,3:2,4:1,5:2,6:2,7:2,8:2,9:1,10:1,11:1,12:1},
@@ -329,13 +354,13 @@ const SEASON = {
 const CITY_NAME = {
   nyc:"New York City", sanjose:"San Jose", austin:"Austin", chicago:"Chicago", omaha:"Omaha",
   scottsdale:"Scottsdale / Phoenix", washingtondc:"Washington, D.C.", saopaulo:"São Paulo",
-  toronto:"Toronto", mexicocity:"Mexico City", paris:"Paris", berlin:"Berlin", dublin:"Dublin",
+  toronto:"Toronto", mexicocity:"Mexico City", nashville:"Nashville", philadelphia:"Philadelphia", paris:"Paris", berlin:"Berlin", dublin:"Dublin",
   telaviv:"Tel Aviv", milan:"Milan", luxembourg:"Luxembourg", amsterdam:"Amsterdam", madrid:"Madrid",
   stockholm:"Stockholm", dubai:"Dubai", london:"London", sydney:"Sydney", bangalore:"Bangalore",
   chennai:"Chennai", mumbai:"Mumbai", tokyo:"Tokyo", singapore:"Singapore"
 };
 // Cities that use US federal holidays in the demand model.
-const US_CITIES = new Set(["nyc","sanjose","austin","chicago","omaha","scottsdale","washingtondc"]);
+const US_CITIES = new Set(["nyc","sanjose","austin","chicago","omaha","scottsdale","washingtondc","nashville","philadelphia"]);
 const LEVELS = { 1:"Low", 2:"Moderate", 3:"High", 4:"Very High" };
 
 // ---- Holiday engine (US federal holidays; applied to US cities) -----------
