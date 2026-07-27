@@ -470,15 +470,15 @@ function run(){
   const err=document.getElementById("err"); err.textContent="";
   if(!s||!e){ err.textContent="Pick both a check-in and check-out date."; return; }
   if(e<s){ err.textContent="Check-out can't be before check-in."; return; }
-  try { localStorage.setItem("tohdp", JSON.stringify({city,s,e})); } catch(_){}
   render(city,s,e);
 }
 document.getElementById("go").addEventListener("click", run);
 
 (function init(){
-  let saved=null; try { saved=JSON.parse(localStorage.getItem("tohdp")||"null"); } catch(_){}
-  if(saved && CITY_NAME[saved.city]){ document.getElementById("city").value=saved.city; document.getElementById("start").value=saved.s; document.getElementById("end").value=saved.e; }
-  else { document.getElementById("city").value="nyc"; document.getElementById("start").value="2026-09-08"; document.getElementById("end").value="2026-09-10"; }
+  // Public demo: always open on the same NYC example, regardless of any previous search.
+  document.getElementById("city").value="nyc";
+  document.getElementById("start").value="2026-09-08";
+  document.getElementById("end").value="2026-09-10";
   run();
 })();
 </script>
