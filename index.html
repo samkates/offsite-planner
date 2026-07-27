@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Offsite Hotel-Demand Planner</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #f5f7fa;
+  color: #1a2332;
+  line-height: 1.5;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 24px 20px 60px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+.sub { color: #5b6b82; font-size: 14px; margin: 0 0 22px; }
+.controls {
+  background: #fff; border: 1px solid #e2e8f2; border-radius: 14px;
+  padding: 18px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
+  box-shadow: 0 1px 3px rgba(20,40,80,.05);
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 12px; font-weight: 600; color: #45546b; text-transform: uppercase; letter-spacing: .03em; }
+select, input[type=date] {
+  padding: 9px 11px; font-size: 15px; border: 1px solid #cfd8e6; border-radius: 9px;
+  background: #fff; color: #1a2332; min-width: 190px;
+}
+button {
+  padding: 10px 20px; font-size: 15px; font-weight: 600; border: none; border-radius: 9px;
+  background: #0b5fff; color: #fff; cursor: pointer;
+}
+button:hover { background: #0a4fd6; }
+.result { margin-top: 24px; }
+.hidden { display: none; }
+.gauge {
+  border-radius: 14px; padding: 20px 22px; color: #fff; margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(20,40,80,.12);
+}
+.gauge .lvl { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; opacity: .9; margin-bottom: 2px; }
+.gauge .big { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+.gauge .why { font-size: 14.5px; opacity: .95; }
+.lvl-1 { background: linear-gradient(135deg,#1f9e5a,#2fb36b); }
+.lvl-2 { background: linear-gradient(135deg,#d9a021,#e6b53d); }
+.lvl-3 { background: linear-gradient(135deg,#e0732a,#ef8f43); }
+.lvl-4 { background: linear-gradient(135deg,#c62f3b,#e14453); }
+.section-title { font-size: 15px; font-weight: 700; margin: 22px 0 10px; color: #1a2332; }
+.card {
+  background: #fff; border: 1px solid #e2e8f2; border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 10px; display: flex; gap: 14px; align-items: flex-start;
+  box-shadow: 0 1px 2px rgba(20,40,80,.04);
+}
+.card.spill { border-left: 4px solid #7a5cff; }
+.dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.card .body { flex: 1; }
+.card .name { font-weight: 650; font-size: 15px; }
+.card .meta { font-size: 13px; color: #5b6b82; margin-top: 2px; }
+.card .note { font-size: 13.5px; color: #37455c; margin-top: 5px; }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+.pill-4 { background: #fde7e9; color: #c62f3b; }
+.pill-3 { background: #fdeede; color: #c96916; }
+.pill-2 { background: #fbf3d8; color: #9a7414; }
+.pill-1 { background: #e3f5ec; color: #1f8a52; }
+.pill-est { background: #eef1f6; color: #66748c; }
+.pill-spill { background: #efeaff; color: #6b4dea; }
+.none { color: #5b6b82; font-size: 14px; background:#fff; border:1px dashed #cfd8e6; border-radius:12px; padding:14px 16px; }
+.legend { font-size: 12.5px; color: #66748c; margin-top: 26px; border-top: 1px solid #e2e8f2; padding-top: 14px; }
+.legend b { color: #45546b; }
+.disclaimer { font-size: 12px; color: #8794a8; margin-top: 12px; }
+.err { color: #c62f3b; font-size: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Team Offsite Hotel-Demand Planner</h1>
+  <p class="sub">Pick a city and your possible dates for your team offsite. See the events driving demand, a hotel-price signal, dates to avoid, and spillover from nearby cities — before you commit.</p>
+
+  <div class="controls">
+    <div class="field">
+      <label for="city">City</label>
+      <select id="city">
+        <optgroup label="Americas">
+          <option value="nyc">New York City</option>
+          <option value="sanjose">San Jose, CA</option>
+          <option value="austin">Austin, TX</option>
+          <option value="chicago">Chicago, IL</option>
+          <option value="omaha">Omaha, NE</option>
+          <option value="scottsdale">Scottsdale / Phoenix, AZ</option>
+          <option value="washingtondc">Washington, D.C.</option>
+          <option value="saopaulo">São Paulo, Brazil</option>
+          <option value="toronto">Toronto, Canada</option>
+          <option value="mexicocity">Mexico City, Mexico</option>
+        </optgroup>
+        <optgroup label="EMEA">
+          <option value="paris">Paris, France</option>
+          <option value="berlin">Berlin, Germany</option>
+          <option value="dublin">Dublin, Ireland</option>
+          <option value="telaviv">Tel Aviv, Israel</option>
+          <option value="milan">Milan, Italy</option>
+          <option value="luxembourg">Luxembourg</option>
+          <option value="amsterdam">Amsterdam, Netherlands</option>
+          <option value="madrid">Madrid, Spain</option>
+          <option value="stockholm">Stockholm, Sweden</option>
+          <option value="dubai">Dubai, UAE</option>
+          <option value="london">London, UK</option>
+        </optgroup>
+        <optgroup label="APAC">
+          <option value="sydney">Sydney, Australia</option>
+          <option value="bangalore">Bangalore, India</option>
+          <option value="chennai">Chennai, India</option>
+          <option value="mumbai">Mumbai, India</option>
+          <option value="tokyo">Tokyo, Japan</option>
+          <option value="singapore">Singapore</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field">
+      <label for="start">Check-in</label>
+      <input type="date" id="start">
+    </div>
+    <div class="field">
+      <label for="end">Check-out</label>
+      <input type="date" id="end">
+    </div>
+    <button id="go">Check demand</button>
+  </div>
+  <div id="err" class="err"></div>
+
+  <div id="result" class="result hidden"></div>
+
+  <div class="legend">
+    <b>How the signal works:</b> the score combines the biggest event overlapping your dates, how many events pile up, national holidays, and the city's seasonal baseline. Events marked <span class="pill pill-est">est.</span> are recurring events whose exact dates for that year aren't confirmed yet — treat the window as approximate. <span class="pill pill-spill">nearby</span> events happen in an adjacent city but still pull hotel demand into your target city.
+    <div class="disclaimer">Curated planning aid built from known major events and seasonality across major global cities — not live hotel pricing. Always confirm actual rates. US event dates are largely confirmed for 2026; many international dates are best-effort recurring windows. Knowledge base last updated July 2026.</div>
+  </div>
+</div>
+
+<script>
+// impact: 1 Low, 2 Moderate, 3 High, 4 Extreme.  est:true = approximate recurring window.  spill:{city} = nearby city.
+const EVENTS = {
+  // ---------- AMERICAS ----------
+  nyc: [
+    { name:"US Open (Tennis)", cat:"Sports", start:"2026-08-23", end:"2026-09-13", impact:3, note:"Three weeks of packed demand; main draw from Aug 30." },
+    { name:"UN General Assembly – High-Level Week", cat:"Diplomatic", start:"2026-09-21", end:"2026-09-28", impact:4, note:"World leaders in town. Midtown East rates spike hard and availability collapses." },
+    { name:"New York Fashion Week (Sept)", cat:"Fashion", start:"2026-09-11", end:"2026-09-16", impact:3, est:true, note:"Overlaps the US Open + UNGA window — a big reason mid-September is so expensive." },
+    { name:"NYC Marathon", cat:"Sports", start:"2026-11-01", end:"2026-11-01", impact:3, note:"First Sunday in November; hotels fill the surrounding weekend." },
+    { name:"New York Comic Con", cat:"Convention", start:"2026-10-08", end:"2026-10-11", impact:3, est:true, note:"Javits Center; ~200k attendees, typically mid-October." },
+    { name:"Christmas / New Year's holidays", cat:"Holiday", start:"2026-12-19", end:"2027-01-01", impact:4, note:"Peak tourist season — tree, NYE in Times Square. Among the priciest weeks of the year." },
+    { name:"New York Fashion Week (Feb)", cat:"Fashion", start:"2027-02-10", end:"2027-02-16", impact:3, est:true, note:"Winter shows; typically mid-February." }
+  ],
+  sanjose: [
+    { name:"Super Bowl LX (Levi's Stadium)", cat:"Sports", start:"2026-02-06", end:"2026-02-09", impact:4, note:"At Levi's Stadium, Santa Clara — the entire South Bay books out.", spill:{city:"Santa Clara"} },
+    { name:"NVIDIA GTC", cat:"Tech conference", start:"2026-03-16", end:"2026-03-19", impact:4, note:"San Jose Convention Center; downtown sells out and rates jump sharply." },
+    { name:"RSA Conference", cat:"Tech conference", start:"2026-04-27", end:"2026-05-01", impact:3, est:true, note:"Moscone, SF; pulls demand across the Bay Area.", spill:{city:"San Francisco"} },
+    { name:"FanimeCon", cat:"Convention", start:"2026-05-22", end:"2026-05-25", impact:2, est:true, note:"San Jose Convention Center, Memorial Day weekend." },
+    { name:"Apple WWDC", cat:"Tech conference", start:"2026-06-08", end:"2026-06-12", impact:2, note:"In-person kickoff at Apple Park, Cupertino.", spill:{city:"Cupertino"} },
+    { name:"Dreamforce", cat:"Tech conference", start:"2026-09-15", end:"2026-09-17", impact:3, note:"Salesforce's ~40k-attendee event at Moscone, SF — spillover reaches the South Bay.", spill:{city:"San Francisco"} },
+    { name:"J.P. Morgan Healthcare Conference", cat:"Finance conference", start:"2027-01-11", end:"2027-01-14", impact:3, est:true, note:"SF in mid-January — one of the most extreme hotel weeks in the Bay Area.", spill:{city:"San Francisco"} }
+  ],
+  austin: [
+    { name:"SXSW", cat:"Festival/Conference", start:"2027-03-15", end:"2027-03-21", impact:4, note:"The single biggest demand event of the Austin year. Books out months ahead. (SXSW EDU Mar 13–16.)" },
+    { name:"Austin City Limits – Weekend 1", cat:"Music festival", start:"2026-10-02", end:"2026-10-04", impact:4, note:"Zilker Park; citywide sellout." },
+    { name:"Austin City Limits – Weekend 2", cat:"Music festival", start:"2026-10-09", end:"2026-10-11", impact:4, note:"Second ACL weekend — same demand surge." },
+    { name:"Formula 1 US Grand Prix (COTA)", cat:"Sports", start:"2026-10-23", end:"2026-10-25", impact:4, note:"Circuit of the Americas; one of the highest hotel-rate weekends of the year." },
+    { name:"UT Longhorns home football", cat:"Sports", start:"2026-08-29", end:"2026-11-28", impact:2, est:true, note:"Home-game Saturdays in fall spike rates — check the specific schedule." }
+  ],
+  chicago: [
+    { name:"Lollapalooza", cat:"Music festival", start:"2026-07-30", end:"2026-08-02", impact:4, note:"Grant Park; ~100k/day. Downtown books out." },
+    { name:"IMTS (Manufacturing Technology Show)", cat:"Convention", start:"2026-09-14", end:"2026-09-19", impact:4, est:true, note:"McCormick Place; one of the largest US trade shows. Even-year September." },
+    { name:"Chicago Marathon", cat:"Sports", start:"2026-10-11", end:"2026-10-11", impact:3, note:"~50k runners plus spectators; tight weekend." },
+    { name:"RSNA Annual Meeting", cat:"Convention", start:"2026-11-29", end:"2026-12-03", impact:4, note:"Huge radiology convention at McCormick Place, right after Thanksgiving." },
+    { name:"St. Patrick's Day (river dyeing)", cat:"Holiday", start:"2027-03-13", end:"2027-03-14", impact:3, est:true, note:"River-dyeing weekend draws heavy downtown demand." }
+  ],
+  omaha: [
+    { name:"Berkshire Hathaway Annual Meeting weekend", cat:"Finance", start:"2026-05-01", end:"2026-05-03", impact:4, note:"\"Woodstock for Capitalists\" — ~40k shareholders. Hotels sell out and rates surge for miles." },
+    { name:"NCAA Men's College World Series", cat:"Sports", start:"2026-06-12", end:"2026-06-22", impact:4, note:"Charles Schwab Field; the whole city fills for ~10 days each June." },
+    { name:"Berkshire Hathaway 2027", cat:"Finance", start:"2027-05-01", end:"2027-05-02", impact:4, est:true, note:"First Saturday in May; same surge." }
+  ],
+  scottsdale: [
+    { name:"WM Phoenix Open (golf)", cat:"Sports", start:"2026-02-02", end:"2026-02-08", impact:4, est:true, note:"\"The People's Open\" — largest-attended golf event; huge Scottsdale/Phoenix demand." },
+    { name:"MLB Cactus League Spring Training", cat:"Sports", start:"2026-02-21", end:"2026-03-24", impact:3, est:true, note:"Weeks of baseball fans across the Phoenix metro through March." },
+    { name:"Barrett-Jackson Collector Car Auction", cat:"Convention", start:"2026-01-24", end:"2026-02-01", impact:3, est:true, note:"Major January auction week in Scottsdale." }
+  ],
+  washingtondc: [
+    { name:"National Cherry Blossom Festival", cat:"Cultural", start:"2026-03-20", end:"2026-04-12", impact:3, est:true, note:"Peak spring tourist season; rates climb across the district." },
+    { name:"Independence Day on the Mall", cat:"Holiday", start:"2026-07-03", end:"2026-07-05", impact:3, note:"DC is a top July 4th destination — heavy demand." },
+    { name:"Marine Corps Marathon", cat:"Sports", start:"2026-10-25", end:"2026-10-25", impact:2, est:true, note:"Late-October weekend bump." }
+  ],
+  saopaulo: [
+    { name:"Carnival", cat:"Cultural", start:"2026-02-13", end:"2026-02-18", impact:3, est:true, note:"Nationwide celebration; travel and rates surge around the long weekend." },
+    { name:"F1 São Paulo Grand Prix (Interlagos)", cat:"Sports", start:"2026-11-06", end:"2026-11-08", impact:4, note:"Autódromo José Carlos Pace; big race-weekend surge." }
+  ],
+  toronto: [
+    { name:"Toronto International Film Festival (TIFF)", cat:"Film festival", start:"2026-09-10", end:"2026-09-20", impact:4, note:"One of the world's top film festivals; downtown hotels surge for ~10 days." },
+    { name:"Caribana (Toronto Caribbean Carnival)", cat:"Cultural", start:"2026-07-31", end:"2026-08-02", impact:2, est:true, note:"Large summer festival, typically the first weekend of August." }
+  ],
+  mexicocity: [
+    { name:"F1 Mexico City Grand Prix", cat:"Sports", start:"2026-10-30", end:"2026-11-01", impact:4, note:"Autódromo Hermanos Rodríguez; overlaps Día de Muertos — a double demand spike." },
+    { name:"Día de Muertos", cat:"Cultural", start:"2026-10-31", end:"2026-11-02", impact:3, note:"Day of the Dead draws heavy tourism to the capital." },
+    { name:"Semana Santa (Holy Week)", cat:"Holiday", start:"2027-03-22", end:"2027-03-28", impact:2, est:true, note:"Spring-break-style domestic travel week." }
+  ],
+  // ---------- EMEA ----------
+  paris: [
+    { name:"Roland-Garros (French Open)", cat:"Sports", start:"2026-05-24", end:"2026-06-07", impact:3, est:true, note:"Two weeks of tennis in late spring; strong demand." },
+    { name:"Paris Fashion Week (Womens SS)", cat:"Fashion", start:"2026-09-28", end:"2026-10-06", impact:3, est:true, note:"Late Sept–early Oct; premium demand and low availability." },
+    { name:"Paris Fashion Week (Womens FW)", cat:"Fashion", start:"2027-03-01", end:"2027-03-09", impact:3, est:true, note:"Late Feb–early March shows." },
+    { name:"Summer tourist peak", cat:"Seasonal", start:"2026-06-15", end:"2026-08-31", impact:3, est:true, note:"Paris runs expensive across mid-summer." }
+  ],
+  berlin: [
+    { name:"Berlinale (Int'l Film Festival)", cat:"Film festival", start:"2027-02-11", end:"2027-02-21", impact:3, est:true, note:"Major February film festival; mid-month demand." },
+    { name:"IFA (consumer electronics)", cat:"Trade fair", start:"2026-09-04", end:"2026-09-09", impact:3, est:true, note:"Large tech trade show in early September." },
+    { name:"ITB Berlin (travel trade)", cat:"Trade fair", start:"2027-03-09", end:"2027-03-11", impact:2, est:true, note:"World's largest travel trade show, early March." }
+  ],
+  dublin: [
+    { name:"St. Patrick's Festival", cat:"Cultural", start:"2027-03-14", end:"2027-03-17", impact:4, est:true, note:"Dublin's biggest demand event of the year — book very early." },
+    { name:"Six Nations rugby (home matches)", cat:"Sports", start:"2027-02-01", end:"2027-03-20", impact:2, est:true, note:"Home-match weekends fill the city." }
+  ],
+  telaviv: [
+    { name:"Tel Aviv Pride", cat:"Cultural", start:"2026-06-10", end:"2026-06-13", impact:3, est:true, note:"One of the world's largest Pride events; mid-June surge." },
+    { name:"High Holidays (Rosh Hashanah–Sukkot)", cat:"Holiday", start:"2026-09-11", end:"2026-10-06", impact:2, est:true, note:"Autumn holiday period; travel and closures affect availability." },
+    { name:"Passover week", cat:"Holiday", start:"2027-04-01", end:"2027-04-08", impact:2, est:true, note:"Domestic travel and closures." }
+  ],
+  milan: [
+    { name:"Milan Design Week / Salone del Mobile", cat:"Trade fair", start:"2026-04-20", end:"2026-04-26", impact:4, note:"The world's biggest design event — the entire city sells out and rates multiply." },
+    { name:"Milan Fashion Week (Womens FW)", cat:"Fashion", start:"2027-02-23", end:"2027-03-01", impact:3, est:true, note:"Late-February shows." },
+    { name:"Milan Fashion Week (Womens SS)", cat:"Fashion", start:"2026-09-22", end:"2026-09-28", impact:3, est:true, note:"Late-September shows." }
+  ],
+  luxembourg: [
+    { name:"Schueberfouer funfair", cat:"Cultural", start:"2026-08-21", end:"2026-09-09", impact:2, est:true, note:"Large annual funfair; modest late-summer bump." },
+    { name:"National Day", cat:"Holiday", start:"2026-06-23", end:"2026-06-23", impact:2, est:true, note:"Grand Duke's Official Birthday celebrations." }
+  ],
+  amsterdam: [
+    { name:"King's Day (Koningsdag)", cat:"Cultural", start:"2026-04-27", end:"2026-04-27", impact:4, note:"City-wide street party — Amsterdam packs out and rooms are scarce." },
+    { name:"Amsterdam Dance Event (ADE)", cat:"Music festival", start:"2026-10-21", end:"2026-10-25", impact:3, est:true, note:"Huge electronic-music conference/festival in October." },
+    { name:"Tulip season", cat:"Seasonal", start:"2026-03-20", end:"2026-05-10", impact:2, est:true, note:"Keukenhof draws steady spring tourism." },
+    { name:"Summer tourist peak", cat:"Seasonal", start:"2026-07-01", end:"2026-08-31", impact:3, est:true, note:"Peak leisure demand." }
+  ],
+  madrid: [
+    { name:"FITUR (int'l tourism fair)", cat:"Trade fair", start:"2027-01-20", end:"2027-01-24", impact:3, est:true, note:"Major travel trade fair; late-January demand." },
+    { name:"Madrid Pride (Orgullo)", cat:"Cultural", start:"2026-07-01", end:"2026-07-05", impact:3, est:true, note:"One of Europe's largest Pride celebrations, early July." },
+    { name:"San Isidro festival", cat:"Cultural", start:"2026-05-14", end:"2026-05-17", impact:2, est:true, note:"City patron-saint festival, mid-May." }
+  ],
+  stockholm: [
+    { name:"Midsummer", cat:"Cultural", start:"2026-06-19", end:"2026-06-20", impact:2, est:true, note:"Major holiday; note many locals leave the city." },
+    { name:"Nobel Week", cat:"Cultural", start:"2026-12-07", end:"2026-12-10", impact:2, est:true, note:"Award ceremonies around December 10." },
+    { name:"Summer tourist peak", cat:"Seasonal", start:"2026-06-15", end:"2026-08-15", impact:3, est:true, note:"Peak leisure season." }
+  ],
+  dubai: [
+    { name:"GITEX Global", cat:"Trade fair", start:"2026-12-07", end:"2026-12-11", impact:4, note:"One of the world's largest tech expos; hotel rates surge citywide." },
+    { name:"Dubai Shopping Festival", cat:"Cultural", start:"2026-12-15", end:"2027-01-31", impact:3, est:true, note:"Major retail/tourism season overlapping peak winter weather." },
+    { name:"Winter high season", cat:"Seasonal", start:"2026-11-01", end:"2027-03-15", impact:3, est:true, note:"Cool-weather peak — the most expensive months to visit." }
+  ],
+  london: [
+    { name:"Wimbledon", cat:"Sports", start:"2026-06-29", end:"2026-07-12", impact:4, note:"Two weeks of tennis; strong summer demand across the city." },
+    { name:"London Fashion Week (Sept)", cat:"Fashion", start:"2026-09-18", end:"2026-09-22", impact:3, est:true, note:"September shows." },
+    { name:"Chelsea Flower Show", cat:"Cultural", start:"2026-05-19", end:"2026-05-23", impact:2, est:true, note:"Major late-May event." },
+    { name:"Christmas / New Year's", cat:"Holiday", start:"2026-12-19", end:"2027-01-01", impact:3, note:"Peak holiday demand." },
+    { name:"Summer tourist peak", cat:"Seasonal", start:"2026-06-15", end:"2026-08-31", impact:3, est:true, note:"London runs expensive all summer." }
+  ],
+  // ---------- APAC ----------
+  sydney: [
+    { name:"New Year's Eve (Harbour fireworks)", cat:"Cultural", start:"2026-12-30", end:"2027-01-01", impact:4, note:"World-famous NYE; hotels surge hard around the harbour." },
+    { name:"Sydney Mardi Gras", cat:"Cultural", start:"2027-02-19", end:"2027-03-06", impact:3, est:true, note:"Major festival culminating in the parade; late Feb–early March." },
+    { name:"Vivid Sydney", cat:"Cultural", start:"2026-05-22", end:"2026-06-13", impact:3, est:true, note:"Large light/music festival across ~3 weeks." },
+    { name:"Australian summer holidays", cat:"Seasonal", start:"2026-12-15", end:"2027-01-26", impact:3, est:true, note:"Peak domestic-travel season." }
+  ],
+  bangalore: [
+    { name:"IPL cricket (home matches)", cat:"Sports", start:"2026-03-28", end:"2026-05-24", impact:2, est:true, note:"Home-game days spike demand near the stadium." },
+    { name:"Aero India", cat:"Trade fair", start:"2027-02-01", end:"2027-02-05", impact:3, est:true, note:"Large biennial aerospace expo (odd years)." },
+    { name:"Diwali", cat:"Holiday", start:"2026-11-08", end:"2026-11-10", impact:2, est:true, note:"Major festival; travel and events peak." }
+  ],
+  chennai: [
+    { name:"Pongal", cat:"Holiday", start:"2027-01-14", end:"2027-01-17", impact:2, est:true, note:"Major Tamil harvest festival in mid-January." },
+    { name:"Chennai Music Season (Margazhi)", cat:"Cultural", start:"2026-12-15", end:"2027-01-15", impact:2, est:true, note:"Weeks of concerts drawing visitors." },
+    { name:"IPL cricket (home matches)", cat:"Sports", start:"2026-03-28", end:"2026-05-24", impact:2, est:true, note:"Home-game days spike local demand." }
+  ],
+  mumbai: [
+    { name:"IPL cricket (Wankhede home matches)", cat:"Sports", start:"2026-03-28", end:"2026-05-24", impact:3, est:true, note:"Marquee home games fill hotels near the stadium." },
+    { name:"Ganesh Chaturthi", cat:"Cultural", start:"2026-09-14", end:"2026-09-24", impact:3, est:true, note:"Mumbai's biggest festival; heavy activity and demand." },
+    { name:"Diwali", cat:"Holiday", start:"2026-11-08", end:"2026-11-10", impact:3, est:true, note:"Peak festival + wedding season begins." },
+    { name:"Wedding & event season", cat:"Seasonal", start:"2026-11-01", end:"2027-02-15", impact:2, est:true, note:"Cooler months are peak for weddings and events." }
+  ],
+  tokyo: [
+    { name:"Cherry blossom season", cat:"Seasonal", start:"2026-03-25", end:"2026-04-07", impact:3, est:true, note:"Peak spring tourism; rooms tighten and rates climb." },
+    { name:"Golden Week", cat:"Holiday", start:"2026-04-29", end:"2026-05-06", impact:4, est:true, note:"Cluster of national holidays — one of Japan's busiest travel weeks." },
+    { name:"Tokyo Game Show", cat:"Trade fair", start:"2026-09-24", end:"2026-09-27", impact:2, est:true, note:"Large gaming expo in late September." },
+    { name:"New Year (Shōgatsu)", cat:"Holiday", start:"2026-12-29", end:"2027-01-03", impact:3, est:true, note:"Major holiday travel period." }
+  ],
+  singapore: [
+    { name:"F1 Singapore Grand Prix", cat:"Sports", start:"2026-10-09", end:"2026-10-11", impact:4, note:"Marina Bay night race — one of the biggest hotel-rate surges of the year." },
+    { name:"Singapore Airshow", cat:"Trade fair", start:"2026-02-03", end:"2026-02-08", impact:3, est:true, note:"Major biennial aerospace event (even years)." },
+    { name:"Chinese New Year", cat:"Holiday", start:"2026-02-17", end:"2026-02-19", impact:3, est:true, note:"Regional travel peak." },
+    { name:"Singapore FinTech Festival", cat:"Trade fair", start:"2026-11-11", end:"2026-11-13", impact:2, est:true, note:"Very large fintech conference in November." }
+  ]
+};
+
+// Seasonal baseline (1 quiet – 3 busy) so event-free dates still reflect general pressure.
+const SEASON = {
+  nyc:{1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:2,9:3,10:2,11:2,12:3},
+  sanjose:{1:2,2:1,3:2,4:1,5:2,6:1,7:1,8:1,9:2,10:1,11:1,12:1},
+  austin:{1:1,2:1,3:3,4:1,5:1,6:1,7:1,8:1,9:2,10:3,11:1,12:1},
+  chicago:{1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:2,11:1,12:1},
+  omaha:{1:1,2:1,3:1,4:1,5:2,6:3,7:1,8:1,9:1,10:1,11:1,12:1},
+  scottsdale:{1:2,2:3,3:3,4:2,5:1,6:1,7:1,8:1,9:1,10:1,11:2,12:2},
+  washingtondc:{1:1,2:1,3:2,4:3,5:2,6:2,7:2,8:1,9:2,10:2,11:1,12:1},
+  saopaulo:{1:2,2:3,3:1,4:1,5:1,6:1,7:1,8:1,9:1,10:1,11:2,12:2},
+  toronto:{1:1,2:1,3:1,4:1,5:2,6:2,7:2,8:2,9:3,10:1,11:1,12:1},
+  mexicocity:{1:1,2:1,3:2,4:2,5:1,6:1,7:2,8:1,9:2,10:2,11:2,12:2},
+  paris:{1:1,2:2,3:2,4:2,5:3,6:3,7:3,8:2,9:3,10:2,11:1,12:2},
+  berlin:{1:1,2:2,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:1,11:1,12:2},
+  dublin:{1:1,2:1,3:2,4:1,5:2,6:2,7:2,8:2,9:1,10:1,11:1,12:1},
+  telaviv:{1:1,2:1,3:2,4:2,5:2,6:2,7:2,8:2,9:2,10:2,11:1,12:1},
+  milan:{1:1,2:2,3:2,4:3,5:2,6:2,7:1,8:1,9:2,10:2,11:1,12:1},
+  luxembourg:{1:1,2:1,3:1,4:1,5:1,6:2,7:1,8:1,9:1,10:1,11:1,12:1},
+  amsterdam:{1:1,2:1,3:2,4:2,5:2,6:2,7:3,8:3,9:2,10:1,11:1,12:2},
+  madrid:{1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:1,9:2,10:2,11:1,12:1},
+  stockholm:{1:1,2:1,3:1,4:1,5:2,6:3,7:3,8:2,9:1,10:1,11:1,12:2},
+  dubai:{1:3,2:3,3:3,4:2,5:1,6:1,7:1,8:1,9:1,10:2,11:3,12:3},
+  london:{1:1,2:2,3:2,4:2,5:3,6:3,7:3,8:3,9:2,10:2,11:2,12:3},
+  sydney:{1:3,2:3,3:2,4:1,5:2,6:2,7:1,8:1,9:1,10:1,11:2,12:3},
+  bangalore:{1:2,2:2,3:1,4:2,5:2,6:1,7:1,8:1,9:1,10:2,11:2,12:2},
+  chennai:{1:2,2:1,3:1,4:2,5:2,6:1,7:1,8:1,9:1,10:1,11:1,12:2},
+  mumbai:{1:2,2:2,3:1,4:2,5:2,6:1,7:1,8:2,9:2,10:2,11:3,12:3},
+  tokyo:{1:2,2:1,3:3,4:3,5:2,6:1,7:1,8:2,9:2,10:2,11:2,12:2},
+  singapore:{1:2,2:2,3:1,4:1,5:1,6:2,7:2,8:2,9:2,10:2,11:2,12:2}
+};
+
+const CITY_NAME = {
+  nyc:"New York City", sanjose:"San Jose", austin:"Austin", chicago:"Chicago", omaha:"Omaha",
+  scottsdale:"Scottsdale / Phoenix", washingtondc:"Washington, D.C.", saopaulo:"São Paulo",
+  toronto:"Toronto", mexicocity:"Mexico City", paris:"Paris", berlin:"Berlin", dublin:"Dublin",
+  telaviv:"Tel Aviv", milan:"Milan", luxembourg:"Luxembourg", amsterdam:"Amsterdam", madrid:"Madrid",
+  stockholm:"Stockholm", dubai:"Dubai", london:"London", sydney:"Sydney", bangalore:"Bangalore",
+  chennai:"Chennai", mumbai:"Mumbai", tokyo:"Tokyo", singapore:"Singapore"
+};
+// Cities that use US federal holidays in the demand model.
+const US_CITIES = new Set(["nyc","sanjose","austin","chicago","omaha","scottsdale","washingtondc"]);
+const LEVELS = { 1:"Low", 2:"Moderate", 3:"High", 4:"Very High" };
+
+// ---- Holiday engine (US federal holidays; applied to US cities) -----------
+function nthWeekday(year, month, weekday, n){ let d=new Date(year,month,1),c=0; while(true){ if(d.getDay()===weekday){c++; if(c===n) return new Date(d);} d.setDate(d.getDate()+1);} }
+function lastWeekday(year, month, weekday){ let d=new Date(year,month+1,0); while(d.getDay()!==weekday) d.setDate(d.getDate()-1); return d; }
+function iso(d){ return d.toISOString().slice(0,10); }
+function holidaysForYear(y){
+  const thx=nthWeekday(y,10,4,4);
+  const thS=new Date(thx); thS.setDate(thx.getDate()-1);
+  const thE=new Date(thx); thE.setDate(thx.getDate()+3);
+  const mem=lastWeekday(y,4,1); const memS=new Date(mem); memS.setDate(mem.getDate()-3);
+  const lab=nthWeekday(y,8,1,1); const labS=new Date(lab); labS.setDate(lab.getDate()-3);
+  return [
+    { name:"July 4th weekend", cat:"Holiday", start:`${y}-07-03`, end:`${y}-07-05`, impact:2, note:"National holiday weekend — broad leisure demand." },
+    { name:"Thanksgiving weekend", cat:"Holiday", start:iso(thS), end:iso(thE), impact:2, note:"Heavy national travel around Thanksgiving." },
+    { name:"Memorial Day weekend", cat:"Holiday", start:iso(memS), end:iso(mem), impact:2, note:"Long weekend, elevated demand." },
+    { name:"Labor Day weekend", cat:"Holiday", start:iso(labS), end:iso(lab), impact:2, note:"Long weekend, elevated demand." },
+    { name:"Christmas / New Year's", cat:"Holiday", start:`${y}-12-20`, end:`${y+1}-01-01`, impact:3, note:"Peak holiday travel period." }
+  ];
+}
+
+// ---- Core logic -----------------------------------------------------------
+function overlaps(s,e,es,ee){ return s<=ee && e>=es; }
+const catColor = { "Sports":"#0b5fff","Diplomatic":"#c62f3b","Fashion":"#c026d3","Convention":"#0891b2","Holiday":"#d9a021","Music festival":"#e0732a","Festival/Conference":"#e0732a","Tech conference":"#6b4dea","Finance conference":"#1f8a52","Finance":"#1f8a52","Film festival":"#c026d3","Trade fair":"#0891b2","Cultural":"#e0732a","Seasonal":"#5b6b82" };
+
+function analyze(city, startStr, endStr){
+  const s=new Date(startStr+"T00:00:00"), e=new Date(endStr+"T00:00:00");
+  let pool=(EVENTS[city]||[]).slice();
+  if(US_CITIES.has(city)){ const ys=new Set(); for(let y=s.getFullYear(); y<=e.getFullYear(); y++) ys.add(y); ys.forEach(y=> pool=pool.concat(holidaysForYear(y))); }
+
+  const hits=pool.filter(ev=>overlaps(startStr,endStr,ev.start,ev.end)).sort((a,b)=>b.impact-a.impact||a.start.localeCompare(b.start));
+  const monthBase=(SEASON[city]&&SEASON[city][s.getMonth()+1])||1;
+  let maxImpact=Math.max(monthBase, ...(hits.length? hits.map(h=>h.impact):[0]));
+  const bigHits=hits.filter(h=>h.impact>=3).length;
+  let score=maxImpact; if(bigHits>=2) score=Math.min(4,score+1);
+  score=Math.max(1,Math.min(4,score));
+
+  const monthKeys=new Set();
+  let d0=new Date(s.getFullYear(),s.getMonth(),1); const dEnd=new Date(e.getFullYear(),e.getMonth(),1);
+  while(d0<=dEnd){ monthKeys.add(d0.getFullYear()+"-"+d0.getMonth()); d0.setMonth(d0.getMonth()+1); }
+  const nearbyAvoid=pool.filter(ev=>{
+    if(overlaps(startStr,endStr,ev.start,ev.end)) return false;
+    if(ev.impact<3) return false;
+    const evs=new Date(ev.start+"T00:00:00");
+    return monthKeys.has(evs.getFullYear()+"-"+evs.getMonth());
+  }).sort((a,b)=>a.start.localeCompare(b.start));
+
+  return { score, hits, nearbyAvoid, monthBase, s, e };
+}
+
+function fmtRange(startStr,endStr){
+  const opt={month:"short",day:"numeric"};
+  const s=new Date(startStr+"T00:00:00"), e=new Date(endStr+"T00:00:00");
+  const sy=s.getFullYear(), ey=e.getFullYear();
+  const sStr=s.toLocaleDateString("en-US",opt), eStr=e.toLocaleDateString("en-US",opt);
+  if(startStr===endStr) return `${sStr}, ${sy}`;
+  return sy===ey? `${sStr} – ${eStr}, ${ey}` : `${sStr}, ${sy} – ${eStr}, ${ey}`;
+}
+
+function eventCard(ev){
+  const pill=`<span class="pill pill-${ev.impact}">${LEVELS[ev.impact]}</span>`;
+  const est=ev.est? `<span class="pill pill-est">est.</span>`:"";
+  const spl=ev.spill? `<span class="pill pill-spill">${ev.spill.city}</span>`:"";
+  const color=catColor[ev.cat]||"#5b6b82";
+  return `<div class="card${ev.spill?" spill":""}">
+    <div class="dot" style="background:${color}"></div>
+    <div class="body">
+      <div class="name">${ev.name}${pill}${est}${spl}</div>
+      <div class="meta">${fmtRange(ev.start,ev.end)} · ${ev.cat}</div>
+      <div class="note">${ev.note||""}</div>
+    </div></div>`;
+}
+
+function render(city, startStr, endStr){
+  const out=document.getElementById("result");
+  const r=analyze(city, startStr, endStr);
+  const cn=CITY_NAME[city];
+  const reasons=[];
+  const overlapBig=r.hits.filter(h=>h.impact>=3);
+  if(overlapBig.length){
+    reasons.push(overlapBig.slice(0,3).map(h=>h.name).join(", ")+(overlapBig.length>3? ` and ${overlapBig.length-3} more`:"")+" fall in your window");
+  }
+  if(overlapBig.length>=2) reasons.push("multiple big events stack on these dates");
+  if(!overlapBig.length && r.monthBase>=2) reasons.push(`${cn} runs seasonally busy this month`);
+  if(!r.hits.length && r.monthBase<2) reasons.push("no major events found and it's a quieter season");
+  const why=reasons.length? reasons.join("; ")+"." : "Based on the seasonal baseline for these dates.";
+
+  let html=`<div class="gauge lvl-${r.score}">
+      <div class="lvl">Hotel-price signal · ${cn}</div>
+      <div class="big">${LEVELS[r.score]}</div>
+      <div class="why">${fmtRange(startStr,endStr)} — ${why}</div>
+    </div>`;
+  html+=`<div class="section-title">Events overlapping your dates (${r.hits.length})</div>`;
+  html+= r.hits.length? r.hits.map(eventCard).join("") : `<div class="none">No known major events overlap these exact dates. Demand should mostly follow the seasonal baseline — but always confirm live rates.</div>`;
+  if(r.nearbyAvoid.length){
+    html+=`<div class="section-title">Also in the same month — shift dates to dodge these</div>`;
+    html+=r.nearbyAvoid.map(eventCard).join("");
+  }
+  out.innerHTML=html; out.classList.remove("hidden");
+}
+
+// ---- Wire up --------------------------------------------------------------
+function run(){
+  const city=document.getElementById("city").value;
+  const s=document.getElementById("start").value;
+  const e=document.getElementById("end").value;
+  const err=document.getElementById("err"); err.textContent="";
+  if(!s||!e){ err.textContent="Pick both a check-in and check-out date."; return; }
+  if(e<s){ err.textContent="Check-out can't be before check-in."; return; }
+  try { localStorage.setItem("tohdp", JSON.stringify({city,s,e})); } catch(_){}
+  render(city,s,e);
+}
+document.getElementById("go").addEventListener("click", run);
+
+(function init(){
+  let saved=null; try { saved=JSON.parse(localStorage.getItem("tohdp")||"null"); } catch(_){}
+  if(saved && CITY_NAME[saved.city]){ document.getElementById("city").value=saved.city; document.getElementById("start").value=saved.s; document.getElementById("end").value=saved.e; }
+  else { document.getElementById("city").value="nyc"; document.getElementById("start").value="2026-09-08"; document.getElementById("end").value="2026-09-10"; }
+  run();
+})();
+</script>
+</body>
+</html>
