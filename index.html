@@ -103,8 +103,12 @@ button:hover { background: #0a4fd6; }
           <option value="mexicocity">Mexico City, Mexico</option>
           <option value="nashville">Nashville, TN</option>
           <option value="philadelphia">Philadelphia, PA</option>
+          <option value="lasvegas">Las Vegas, NV</option>
+          <option value="raleigh">Raleigh, NC</option>
+          <option value="charlotte">Charlotte, NC</option>
         </optgroup>
         <optgroup label="EMEA">
+          <option value="barcelona">Barcelona, Spain</option>
           <option value="paris">Paris, France</option>
           <option value="berlin">Berlin, Germany</option>
           <option value="dublin">Dublin, Ireland</option>
@@ -223,7 +227,31 @@ const EVENTS = {
     { name:"Philadelphia Flower Show", cat:"Cultural", start:"2026-02-28", end:"2026-03-08", impact:3, note:"PHS show at the PA Convention Center; large late-winter draw." },
     { name:"Broad Street Run", cat:"Sports", start:"2026-05-03", end:"2026-05-03", impact:2, est:true, note:"Large 10-mile road race, typically early May." }
   ],
+  lasvegas: [
+    { name:"CES", cat:"Trade fair", start:"2026-01-06", end:"2026-01-09", impact:4, note:"The tech industry's largest show (~130k attendees); the Strip sells out and rates spike hard." },
+    { name:"EDC (Electric Daisy Carnival)", cat:"Music festival", start:"2026-05-15", end:"2026-05-17", impact:3, est:true, note:"Massive electronic-music festival, typically mid-May." },
+    { name:"SEMA Show", cat:"Trade fair", start:"2026-11-03", end:"2026-11-06", impact:3, note:"Huge automotive trade show at the Las Vegas Convention Center." },
+    { name:"F1 Las Vegas Grand Prix", cat:"Sports", start:"2026-11-19", end:"2026-11-21", impact:4, note:"Saturday-night race on the Strip; one of the biggest hotel-rate surges of the year." },
+    { name:"National Finals Rodeo (NFR)", cat:"Sports", start:"2026-12-03", end:"2026-12-12", impact:4, note:"10 nights of rodeo; fills the city for over a week each December." },
+    { name:"New Year's Eve on the Strip", cat:"Holiday", start:"2026-12-31", end:"2027-01-01", impact:4, note:"One of the biggest NYE destinations in the US — extreme demand." }
+  ],
+  raleigh: [
+    { name:"Dix Park spring festival (formerly Dreamville)", cat:"Music festival", start:"2026-04-04", end:"2026-04-05", impact:3, est:true, note:"Raleigh's big spring music-festival weekend at Dix Park; early April. Confirm the year's lineup/dates — the event was in transition for 2026." },
+    { name:"NC State Fair", cat:"Cultural", start:"2026-10-15", end:"2026-10-25", impact:3, note:"~1M+ visitors over 11 days; the area's biggest annual draw." }
+  ],
+  charlotte: [
+    { name:"Wells Fargo Championship (Quail Hollow)", cat:"Sports", start:"2026-05-06", end:"2026-05-12", impact:3, note:"PGA Tour event at Quail Hollow; south Charlotte demand rises for the week." },
+    { name:"Coca-Cola 600 (Charlotte Motor Speedway)", cat:"Sports", start:"2026-05-22", end:"2026-05-24", impact:3, est:true, note:"NASCAR's Memorial Day weekend race in nearby Concord.", spill:{city:"Concord, NC"} },
+    { name:"ACC Football Championship", cat:"Sports", start:"2026-12-05", end:"2026-12-05", impact:2, est:true, note:"Held at Bank of America Stadium; early-December weekend bump." }
+  ],
   // ---------- EMEA ----------
+  barcelona: [
+    { name:"Mobile World Congress (MWC)", cat:"Trade fair", start:"2026-03-02", end:"2026-03-05", impact:4, note:"Barcelona's biggest demand event — ~100k attendees; the city sells out and rates multiply. Book far ahead." },
+    { name:"ISE (Integrated Systems Europe)", cat:"Trade fair", start:"2026-02-03", end:"2026-02-06", impact:3, note:"Large AV/systems trade show at Fira Barcelona; strong early-February demand." },
+    { name:"Primavera Sound", cat:"Music festival", start:"2026-06-04", end:"2026-06-06", impact:3, note:"Major music festival at Parc del Fòrum in early June." },
+    { name:"La Mercè festival", cat:"Cultural", start:"2026-09-24", end:"2026-09-27", impact:2, est:true, note:"Barcelona's biggest street festival, late September." },
+    { name:"Summer tourist peak", cat:"Seasonal", start:"2026-06-15", end:"2026-08-31", impact:3, est:true, note:"Barcelona runs expensive across mid-summer." }
+  ],
   paris: [
     { name:"Roland-Garros (French Open)", cat:"Sports", start:"2026-05-24", end:"2026-06-07", impact:3, est:true, note:"Two weeks of tennis in late spring; strong demand." },
     { name:"Paris Fashion Week (Womens SS)", cat:"Fashion", start:"2026-09-28", end:"2026-10-06", impact:3, est:true, note:"Late Sept–early Oct; premium demand and low availability." },
@@ -332,6 +360,10 @@ const SEASON = {
   mexicocity:{1:1,2:1,3:2,4:2,5:1,6:1,7:2,8:1,9:2,10:2,11:2,12:2},
   nashville:{1:1,2:1,3:2,4:2,5:2,6:3,7:2,8:2,9:2,10:2,11:2,12:2},
   philadelphia:{1:1,2:1,3:1,4:2,5:2,6:2,7:2,8:1,9:2,10:2,11:1,12:1},
+  lasvegas:{1:2,2:2,3:2,4:2,5:2,6:1,7:1,8:1,9:2,10:2,11:2,12:2},
+  raleigh:{1:1,2:1,3:1,4:2,5:2,6:1,7:1,8:1,9:2,10:2,11:1,12:1},
+  charlotte:{1:1,2:1,3:1,4:2,5:2,6:2,7:1,8:1,9:2,10:2,11:1,12:1},
+  barcelona:{1:1,2:2,3:2,4:2,5:2,6:3,7:3,8:3,9:2,10:2,11:1,12:1},
   paris:{1:1,2:2,3:2,4:2,5:3,6:3,7:3,8:2,9:3,10:2,11:1,12:2},
   berlin:{1:1,2:2,3:1,4:1,5:2,6:2,7:2,8:2,9:2,10:1,11:1,12:2},
   dublin:{1:1,2:1,3:2,4:1,5:2,6:2,7:2,8:2,9:1,10:1,11:1,12:1},
@@ -354,13 +386,13 @@ const SEASON = {
 const CITY_NAME = {
   nyc:"New York City", sanjose:"San Jose", austin:"Austin", chicago:"Chicago", omaha:"Omaha",
   scottsdale:"Scottsdale / Phoenix", washingtondc:"Washington, D.C.", saopaulo:"São Paulo",
-  toronto:"Toronto", mexicocity:"Mexico City", nashville:"Nashville", philadelphia:"Philadelphia", paris:"Paris", berlin:"Berlin", dublin:"Dublin",
+  toronto:"Toronto", mexicocity:"Mexico City", nashville:"Nashville", philadelphia:"Philadelphia", lasvegas:"Las Vegas", raleigh:"Raleigh", charlotte:"Charlotte", barcelona:"Barcelona", paris:"Paris", berlin:"Berlin", dublin:"Dublin",
   telaviv:"Tel Aviv", milan:"Milan", luxembourg:"Luxembourg", amsterdam:"Amsterdam", madrid:"Madrid",
   stockholm:"Stockholm", dubai:"Dubai", london:"London", sydney:"Sydney", bangalore:"Bangalore",
   chennai:"Chennai", mumbai:"Mumbai", tokyo:"Tokyo", singapore:"Singapore"
 };
 // Cities that use US federal holidays in the demand model.
-const US_CITIES = new Set(["nyc","sanjose","austin","chicago","omaha","scottsdale","washingtondc","nashville","philadelphia"]);
+const US_CITIES = new Set(["nyc","sanjose","austin","chicago","omaha","scottsdale","washingtondc","nashville","philadelphia","lasvegas","raleigh","charlotte"]);
 const LEVELS = { 1:"Low", 2:"Moderate", 3:"High", 4:"Very High" };
 
 // ---- Holiday engine (US federal holidays; applied to US cities) -----------
