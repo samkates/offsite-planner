@@ -84,7 +84,7 @@ button:hover { background: #0a4fd6; }
   <!-- LAST REFRESHED: update ONLY the date in the line below each   -->
   <!-- time you refresh the site (keep the format: Month Day, Year). -->
   <!-- ============================================================= -->
-  <div class="freshness"><span class="fresh-dot"></span><div><b>Data last refreshed: July 28, 2026.</b> Event dates and listings are subject to change. This site is refreshed roughly every 30 days &mdash; always confirm current hotel rates and event dates before booking.</div></div>
+  <div class="freshness"><span class="fresh-dot"></span><div><b>Data last refreshed: July 31, 2026.</b> Event dates and listings are subject to change. This site is refreshed roughly every 30 days &mdash; always confirm current hotel rates and event dates before booking.</div></div>
 
   <div class="controls">
     <div class="field">
@@ -188,6 +188,9 @@ const EVENTS = {
     { name:"UT Longhorns home football", cat:"Sports", start:"2026-08-29", end:"2026-11-28", impact:2, est:true, note:"Home-game Saturdays in fall spike rates — check the specific schedule." }
   ],
   chicago: [
+    { name:"National Restaurant Association Show", cat:"Trade fair", start:"2026-05-16", end:"2026-05-19", impact:3, note:"~50k-attendee foodservice show at McCormick Place, mid-May." },
+    { name:"PACK EXPO International", cat:"Trade fair", start:"2026-10-18", end:"2026-10-21", impact:3, note:"Huge packaging show (~45k) at McCormick Place; Chicago in even years." },
+    { name:"National Restaurant Association Show", cat:"Trade fair", start:"2027-05-15", end:"2027-05-18", impact:3, est:true, note:"Mid-May foodservice show at McCormick Place." },
     { name:"Lollapalooza", cat:"Music festival", start:"2027-07-29", end:"2027-08-01", impact:4, note:"Grant Park; late-July/early-August weekend." },
     { name:"Chicago Marathon", cat:"Sports", start:"2027-10-10", end:"2027-10-10", impact:3, note:"Second Sunday in October." },
     { name:"RSNA Annual Meeting", cat:"Convention", start:"2027-11-14", end:"2027-11-18", impact:4, note:"Radiology society at McCormick Place (2027 meeting moved earlier in November)." },
@@ -242,6 +245,14 @@ const EVENTS = {
     { name:"Broad Street Run", cat:"Sports", start:"2026-05-03", end:"2026-05-03", impact:2, est:true, note:"Large 10-mile road race, typically early May." }
   ],
   lasvegas: [
+    { name:"G2E (Global Gaming Expo)", cat:"Trade fair", start:"2026-09-28", end:"2026-10-01", impact:3, note:"Gaming industry's big show at The Venetian; strong late-Sept/early-Oct demand." },
+    { name:"IMEX America", cat:"Trade fair", start:"2026-10-13", end:"2026-10-15", impact:3, note:"Meetings & events industry expo at Mandalay Bay." },
+    { name:"Money20/20 USA", cat:"Trade fair", start:"2026-10-25", end:"2026-10-28", impact:3, est:true, note:"Major fintech conference, typically late October." },
+    { name:"MJBizCon", cat:"Trade fair", start:"2026-12-01", end:"2026-12-04", impact:3, note:"Large cannabis-industry conference (~30k) at the Las Vegas Convention Center." },
+    { name:"G2E (Global Gaming Expo)", cat:"Trade fair", start:"2027-10-04", end:"2027-10-07", impact:3, est:true, note:"Gaming expo, early October." },
+    { name:"IMEX America", cat:"Trade fair", start:"2027-10-12", end:"2027-10-14", impact:3, est:true, note:"Meetings-industry expo, mid-October." },
+    { name:"PACK EXPO Las Vegas", cat:"Trade fair", start:"2027-09-27", end:"2027-09-29", impact:3, est:true, note:"Large packaging show (Vegas in odd years), late September." },
+    { name:"MJBizCon", cat:"Trade fair", start:"2027-11-30", end:"2027-12-03", impact:3, est:true, note:"Cannabis-industry conference, early December." },
     { name:"AWS re:Invent", cat:"Trade fair", start:"2026-11-30", end:"2026-12-04", impact:4, note:"~60k-attendee AWS cloud conference across Caesars, Venetian, Wynn, MGM and more; the Strip books out." },
     { name:"AWS re:Invent", cat:"Trade fair", start:"2027-11-29", end:"2027-12-03", impact:4, est:true, note:"Annual AWS cloud conference, late Nov/early Dec (exact 2027 dates TBA)." },
     { name:"CES", cat:"Trade fair", start:"2027-01-06", end:"2027-01-09", impact:4, note:"The tech industry's largest show; the Strip sells out." },
@@ -266,6 +277,9 @@ const EVENTS = {
   ],
   // ---------- EMEA ----------
   barcelona: [
+    { name:"Smart City Expo World Congress", cat:"Trade fair", start:"2026-11-03", end:"2026-11-05", impact:3, note:"Leading smart-cities congress at Fira Barcelona (~25k), early November." },
+    { name:"IBTM World", cat:"Trade fair", start:"2026-11-17", end:"2026-11-19", impact:2, note:"Meetings & events industry expo at Fira Barcelona, mid-November." },
+    { name:"Smart City Expo World Congress", cat:"Trade fair", start:"2027-11-02", end:"2027-11-04", impact:3, est:true, note:"Smart-cities congress at Fira Barcelona, early November." },
     { name:"Mobile World Congress (MWC)", cat:"Trade fair", start:"2027-03-01", end:"2027-03-04", impact:4, note:"Barcelona's biggest event; the city sells out and rates multiply." },
     { name:"ISE (Integrated Systems Europe)", cat:"Trade fair", start:"2027-02-02", end:"2027-02-05", impact:3, est:true, note:"Large AV/systems trade show, early February." },
     { name:"Primavera Sound", cat:"Music festival", start:"2027-06-03", end:"2027-06-05", impact:3, est:true, note:"Early-June music festival at Parc del Fòrum." },
